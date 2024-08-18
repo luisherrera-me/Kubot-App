@@ -32,7 +32,7 @@ fun Login (
             vm.saveSession(response.data)
             Log.d("Login", response.data.toString())
             vm.getSession()
-            navController.navigate(route = Graph.USER) {
+            navController.navigate(route = Graph.CLIENT) {
                 popUpTo(Graph.AUTH) {
                     inclusive = true
                 }

@@ -1,29 +1,28 @@
-package com.kuby.kubot.presentation.screen.user.home.components
-
+package com.kuby.kubot.presentation.screen.client.home.components
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.kuby.kubot.presentation.navgation.screen.user.UserScreen
-
+import com.kuby.kubot.presentation.navgation.screen.client.ClientScreen
 
 @Composable
-fun BottomBar (navController: NavHostController) {
+fun ClientBottomBar(navController: NavHostController) {
 
-    val screen = listOf(
-        UserScreen.Profile,
-        UserScreen.CropList,
-        UserScreen.RobotList,
-        UserScreen.CategoryList
+    val screens = listOf(
+        ClientScreen.ProductList,
+        ClientScreen.CategoryList,
+        ClientScreen.Profile,
     )
+
     val navBackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackEntry?.destination
-    val bottomBarDestination = screen.any { it.route == currentDestination?.route }
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+
     if (bottomBarDestination) {
         BottomNavigation() {
-            screen.forEach { screen ->
-                BottonBarItem(
+            screens.forEach { screen ->
+                ClientBottomBarItem(
                     screen = screen,
                     currentDestination = currentDestination,
                     navController = navController
@@ -31,6 +30,5 @@ fun BottomBar (navController: NavHostController) {
             }
         }
     }
-
 
 }

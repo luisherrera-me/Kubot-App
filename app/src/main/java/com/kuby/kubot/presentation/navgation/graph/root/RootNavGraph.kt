@@ -1,15 +1,14 @@
-package com.kuby.kubot.presentation.navgation.graph
+package com.kuby.kubot.presentation.navgation.graph.root
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import coil.annotation.ExperimentalCoilApi
 import com.kuby.kubot.presentation.navgation.Graph
-import com.kuby.kubot.presentation.screen.user.home.HomeScreen
+import com.kuby.kubot.presentation.navgation.graph.auth.authNavGraph
+import com.kuby.kubot.presentation.navgation.graph.roles.RolesNavGraph
 
 
-@OptIn(ExperimentalCoilApi::class)
+
 @Composable
 fun RootNavGraph(navController: NavHostController) {
     NavHost(
@@ -18,8 +17,6 @@ fun RootNavGraph(navController: NavHostController) {
         startDestination = Graph.AUTH
     ) {
         authNavGraph(navController = navController)
-        composable(route = Graph.USER) {
-            HomeScreen(navController = navController)
-        }
+        RolesNavGraph(navController = navController)
     }
 }

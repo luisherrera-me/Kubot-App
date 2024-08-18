@@ -1,4 +1,4 @@
-package com.kuby.kubot.presentation.screen.user.profile
+package com.kuby.kubot.presentation.screen.profile
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem

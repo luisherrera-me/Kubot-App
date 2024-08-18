@@ -1,17 +1,16 @@
-package com.kuby.kubot.presentation.navgation.graph
+package com.kuby.kubot.presentation.navgation.graph.auth
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import coil.annotation.ExperimentalCoilApi
 import com.kuby.kubot.presentation.navgation.Graph
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
 import com.kuby.kubot.presentation.screen.auth.login.LoginScreen
 import com.kuby.kubot.presentation.screen.auth.register.RegisterScreen
-import com.kuby.kubot.presentation.screen.user.profile.ProfileScreen
 
-@OptIn(ExperimentalCoilApi::class)
+
+
 fun NavGraphBuilder.authNavGraph(navController: NavHostController){
     navigation(
         route = Graph.AUTH,
@@ -22,9 +21,6 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController){
         }
         composable(route = AuthScreen.Register.route){
             RegisterScreen(navController = navController)
-        }
-        composable(route = AuthScreen.Profile.route){
-            ProfileScreen(navController = navController)
         }
     }
 }

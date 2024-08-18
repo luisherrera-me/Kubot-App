@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.kuby.kubot.presentation.navgation.graph.RootNavGraph
+import com.kuby.kubot.presentation.navgation.graph.root.RootNavGraph
 import com.kuby.kubot.presentation.ui.theme.KubotTheme
 import dagger.hilt.android.AndroidEntryPoint
 

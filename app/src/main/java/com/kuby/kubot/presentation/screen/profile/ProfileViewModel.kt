@@ -1,4 +1,4 @@
-package com.kuby.kubot.presentation.screen.user.profile
+package com.kuby.kubot.presentation.screen.profile
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
