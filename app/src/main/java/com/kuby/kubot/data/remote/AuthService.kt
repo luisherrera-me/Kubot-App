@@ -17,10 +17,12 @@ interface AuthService {
         @Body request: ApiRequest
     ): ApiResponse
 
+
     @POST("/api/v1/auth/sign_in")
     suspend fun login(
         @Body request: LoginResponse
     ): Response<AuthResponse>
+
 
     @POST("/api/v1/auth/sign_up")
     suspend fun register(
