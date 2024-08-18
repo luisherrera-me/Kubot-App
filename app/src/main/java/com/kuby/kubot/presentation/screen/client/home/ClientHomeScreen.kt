@@ -7,13 +7,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.kuby.kubot.presentation.navgation.graph.client.ClientNavGraph
 import com.kuby.kubot.presentation.screen.client.home.components.ClientBottomBar
+
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ClientHomeScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = { ClientBottomBar(navController = navController) }
-    ) { paddingValues ->
-//        Box(modifier = Modifier.padding(paddingValues))
+    ) {
         ClientNavGraph(navController = navController)
     }
 }

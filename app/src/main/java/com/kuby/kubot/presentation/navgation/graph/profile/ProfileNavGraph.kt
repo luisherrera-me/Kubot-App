@@ -9,7 +9,7 @@ import androidx.navigation.navigation
 import com.kuby.kubot.presentation.navgation.Graph
 import com.kuby.kubot.presentation.navgation.screen.profile.ProfileScreen
 
-fun NavGraphBuilder.ProfileNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.profileNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.PROFILE + "/{user}",
         startDestination = ProfileScreen.ProfileUpdate.route

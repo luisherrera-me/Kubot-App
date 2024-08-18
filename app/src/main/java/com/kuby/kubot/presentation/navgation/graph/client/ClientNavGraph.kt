@@ -7,10 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import coil.annotation.ExperimentalCoilApi
 import com.kuby.kubot.presentation.navgation.Graph
-import com.kuby.kubot.presentation.navgation.graph.profile.ProfileNavGraph
+import com.kuby.kubot.presentation.navgation.graph.profile.profileNavGraph
 import com.kuby.kubot.presentation.navgation.screen.client.ClientScreen
-import com.kuby.kubot.presentation.screen.client.category.list.ClientCategoryListScreen
-import com.kuby.kubot.presentation.screen.client.product.list.ClientProductListScreen
+import com.kuby.kubot.presentation.screen.client.Crops.list.ClientCropListScreen
+import com.kuby.kubot.presentation.screen.client.dashboard.DashboardScreen
+import com.kuby.kubot.presentation.screen.client.devices.list.ClientDeviceListScreen
 import com.kuby.kubot.presentation.screen.profile.ProfileScreen
 
 @OptIn(ExperimentalCoilApi::class)
@@ -19,15 +20,15 @@ fun ClientNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = Graph.CLIENT,
-        startDestination = ClientScreen.ProductList.route
+        startDestination = ClientScreen.Dashboard.route
     ) {
 
-        composable(route = ClientScreen.ProductList.route) {
-            ClientProductListScreen()
+        composable(route = ClientScreen.DeviceList.route) {
+            ClientDeviceListScreen()
         }
 
-        composable(route = ClientScreen.CategoryList.route) {
-            ClientCategoryListScreen()
+        composable(route = ClientScreen.CropList.route) {
+            ClientCropListScreen()
         }
 
 
@@ -35,8 +36,12 @@ fun ClientNavGraph(navController: NavHostController) {
             ProfileScreen(navController)
         }
 
+        composable(route = ClientScreen.Dashboard.route) {
+            DashboardScreen()
+        }
 
-        ProfileNavGraph(navController)
+
+        profileNavGraph(navController)
 
     }
 }

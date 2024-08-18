@@ -10,8 +10,9 @@ import com.kuby.kubot.presentation.navgation.screen.client.ClientScreen
 fun ClientBottomBar(navController: NavHostController) {
 
     val screens = listOf(
-        ClientScreen.ProductList,
-        ClientScreen.CategoryList,
+        ClientScreen.Dashboard,
+        ClientScreen.DeviceList,
+        ClientScreen.CropList,
         ClientScreen.Profile,
     )
 
