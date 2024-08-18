@@ -9,7 +9,7 @@ import com.kuby.kubot.presentation.navgation.Graph
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
 import com.kuby.kubot.presentation.screen.auth.login.LoginScreen
 import com.kuby.kubot.presentation.screen.auth.register.RegisterScreen
-import com.kuby.kubot.presentation.screen.profile.ProfileScreen
+import com.kuby.kubot.presentation.screen.user.profile.ProfileScreen
 
 @OptIn(ExperimentalCoilApi::class)
 fun NavGraphBuilder.authNavGraph(navController: NavHostController){
@@ -20,7 +20,6 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController){
         composable(route = AuthScreen.Login.route){
             LoginScreen(navController = navController)
         }
-
         composable(route = AuthScreen.Register.route){
             RegisterScreen(navController = navController)
         }

@@ -1,7 +1,7 @@
 package com.kuby.kubot.data.repository
 
 import android.util.Log
-import com.kuby.kubot.data.remote.KtorApi
+import com.kuby.kubot.data.remote.AuthService
 import com.kuby.kubot.domain.model.ApiRequest
 import com.kuby.kubot.domain.model.ApiResponse
 import com.kuby.kubot.domain.model.UserUpdate
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val dataStoreOperations: DataStoreOperations,
-    private val ktorApi: KtorApi
+    private val ktorApi: AuthService
 ): Repository{
     override suspend fun saveSignedInState(signedIn: Boolean) {
         dataStoreOperations.saveSignedInState(signedIn = signedIn)

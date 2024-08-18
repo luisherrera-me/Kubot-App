@@ -1,4 +1,4 @@
-package com.kuby.kubot.presentation.screen.profile
+package com.kuby.kubot.presentation.screen.user.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity

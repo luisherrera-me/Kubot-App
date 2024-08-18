@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kuby.kubot.presentation.screen.auth.login.components.Login
+import com.kuby.kubot.presentation.screen.auth.register.components.Register
 import com.kuby.kubot.presentation.screen.auth.register.components.RegisterContent
 
 @Composable
@@ -28,4 +30,5 @@ fun RegisterScreen(
 
         )
     }
+    Register(navController = navController)
 }

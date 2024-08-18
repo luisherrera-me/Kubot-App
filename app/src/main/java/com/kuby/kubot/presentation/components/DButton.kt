@@ -44,15 +44,14 @@ import com.kuby.kubot.presentation.ui.theme.textColor
 import com.kuby.kubot.presentation.ui.theme.topAppBarContentColor
 
 
+
 @Composable
 fun DButton(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 20.dp, start = 60.dp, end = 60.dp),
+    modifier: Modifier = Modifier,
     loadingState: Boolean = false,
-    primaryText: String,
+    primaryText: String = "Sign in with Google",
     secondaryText: String = "Please wait...",
-    icon: Int,
+    icon: Int = R.drawable.ic_google,
     shape: Shape = RoundedCornerShape(7.dp), // Aquí defines el shape con bordes redondeados
     borderColor: Color = Color.Transparent,
     backgroundColor: Color = Color.Black,
@@ -60,6 +59,12 @@ fun DButton(
     progressIndicatorColor: Color = InfoGreen,
     onClick: () -> Unit
 ){
+    var buttonText by remember { mutableStateOf(primaryText) }
+
+    LaunchedEffect(key1 = loadingState){
+        buttonText = if (loadingState) secondaryText else primaryText
+    }
+
     Button(
         onClick = {
             onClick()
@@ -70,23 +75,49 @@ fun DButton(
         ),
         shape = RoundedCornerShape(7.dp)
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = "arrow",
-            tint = Color.White,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(2.dp))
-        Text(
-            text = primaryText,
-            color = Color.White,
-            fontFamily = RegularFont,
+        Row (
             modifier = Modifier
-                .padding(6.dp))
+                .padding(
+                    start = 0.dp,
+                    end = 0.dp,
+                    top = 0.dp,
+                    bottom = 0.dp
+                )
+                .animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = LinearOutSlowInEasing
+                    )
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            Icon(
+                painter =  painterResource(id = icon),
+                contentDescription = "google logo",
+                modifier = Modifier.size(20.dp),
+                tint = Color.Unspecified
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = buttonText,
+                //fontSize = MaterialTheme.typography.subtitle2.fontSize,
+                fontWeight = FontWeight.Normal,
+                color = Color.White
+            )
+            if(loadingState){
+                Spacer(modifier = Modifier.width(16.dp))
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = progressIndicatorColor
+                )
+            }
+        }
     }
-
-
 }
+
 
 @Composable
 @Preview

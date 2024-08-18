@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
@@ -60,23 +62,23 @@ fun GoogleButton(
         buttonText = if (loadingState) secondaryText else primaryText
     }
 
-    Surface(
-        modifier = Modifier
-            .clickable(enabled = !loadingState){
-                onClick()
-            }
-            .then(modifier), // Aplicar el modificador pasado como parámetro
-        shape = shape, // Aquí aplicas el shape a la Surface
-        border = BorderStroke(width = borderStroke, color = borderColor),
-        color = backgroundColor
-    ) {
+    Button(
+        onClick = {
+            onClick()
+        },
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Black, contentColor = Color.Black
+        ),
+        shape = RoundedCornerShape(7.dp)
+    ){
         Row (
             modifier = Modifier
                 .padding(
-                    start = 12.dp,
-                    end = 16.dp,
-                    top = 12.dp,
-                    bottom = 12.dp
+                    start = 1.dp,
+                    end = 1.dp,
+                    top = 5.dp,
+                    bottom = 5.dp
                 )
                 .animateContentSize(
                     animationSpec = tween(

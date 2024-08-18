@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import com.kuby.kubot.domain.model.ApiRequest
 import com.kuby.kubot.domain.model.ApiResponse
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
+import com.kuby.kubot.presentation.screen.auth.login.components.Login
 import com.kuby.kubot.presentation.screen.common.StartActivityForResult
 import com.kuby.kubot.presentation.screen.common.signIn
 import com.kuby.kubot.presentation.screen.auth.login.components.LoginContent
@@ -25,6 +26,7 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val signedInState by loginViewModel.signedInState
+    val logInState by loginViewModel.LogInState
     val messageBarState by loginViewModel.messageBarState
     val apiResponse by loginViewModel.apiResponse
 
@@ -38,6 +40,7 @@ fun LoginScreen(
             LoginContent(
                 signedInState = signedInState,
                 messageBarState = messageBarState,
+                logInState = logInState,
                 navController = navController,
                 onButtonClicked = {
                     loginViewModel.saveSignedInState(signedIn = true)
@@ -47,6 +50,8 @@ fun LoginScreen(
     )
 
     val activity = LocalContext.current as Activity
+    
+    Login(navController = navController)
 
     StartActivityForResult(
         key = signedInState,

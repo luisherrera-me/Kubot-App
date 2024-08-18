@@ -57,6 +57,7 @@ import com.kuby.kubot.presentation.ui.theme.RegularFont
 @Composable
 fun LoginContent(
     signedInState: Boolean,
+    logInState: Boolean,
     navController: NavHostController,
     messageBarState: MessageBarState,
     onButtonClicked: () -> Unit
@@ -89,6 +90,7 @@ fun LoginContent(
                 CentralConent(
                     signedInState = signedInState,
                     navController = navController,
+                    logInState = logInState,
                     onButtonClicked = onButtonClicked
                 )
                 MessageBar(messageBarState = messageBarState)
@@ -101,6 +103,7 @@ fun LoginContent(
 fun CentralConent(
     vm: LoginViewModel = hiltViewModel(),
     signedInState: Boolean,
+    logInState: Boolean,
     navController: NavHostController,
     onButtonClicked: () -> Unit
 ){
@@ -148,13 +151,15 @@ fun CentralConent(
             onTogglePasswordVisibility = { vm.onShowPasswordInput(!vm.state.showPassword) },
         )
 
-        DButton(
+        GoogleButton(
             Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp, start = 60.dp, end = 60.dp),
             primaryText = "Login",
+            secondaryText = "Sign Up ...",
             icon = R.drawable.ic_arrow_right,
-            onClick = { vm.validateForm() }
+            loadingState = logInState,
+            onClick = { vm.login() }
         )
 
         Text(
@@ -166,6 +171,7 @@ fun CentralConent(
             color = Color.Black,
             fontFamily = RegularFont
         )
+
 
         Text(
             modifier = Modifier

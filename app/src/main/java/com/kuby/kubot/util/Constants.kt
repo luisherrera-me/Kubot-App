@@ -4,9 +4,15 @@ import java.util.prefs.Preferences
 
 object Constants {
 
-    const val BASE_URL = "http://192.168.101.75:8080"
-    const val PREFERENCES_NAME = "app_preferences"
+    const val BASE_URL = "http://192.168.101.73:8080"
+    const val PREFERENCES = "app_preferences"
     const val PREFERENCES_SIGNED_IN_KEY = "signed_in_key"
+
+    const val AUTH_PREFERENCES = "AUTH_PREF"
+    const val AUTH_KEY = "AUTH_KEY"
+
+
+
 
     const val CLIENT_ID = "383811160220-c560qg78iff3l9h2nd3c5tptvkt92jgl.apps.googleusercontent.com"
 

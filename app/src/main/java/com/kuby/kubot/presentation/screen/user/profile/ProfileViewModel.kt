@@ -1,4 +1,4 @@
-package com.kuby.kubot.presentation.screen.profile
+package com.kuby.kubot.presentation.screen.user.profile
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -63,8 +63,8 @@ class ProfileViewModel @Inject constructor(
                 )
                 if (response.user != null) {
                     _user.value = response.user
-                    _firstName.value = response.user.name.split(" ").first()
-                    _lastName.value = response.user.name.split(" ").last()
+                    _firstName.value = response.user.name?.split(" ")?.first() ?: ""
+                    _lastName.value = response.user.lastName?.split(" ")?.last() ?: ""
                 }
                 Log.d("ProfileViewModel", "getUserInfo: $response")
             } catch (e: Exception) {

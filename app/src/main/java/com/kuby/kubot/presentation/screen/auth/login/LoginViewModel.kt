@@ -1,34 +1,33 @@
 package com.kuby.kubot.presentation.screen.auth.login
 
-import android.os.Message
-import android.os.Messenger
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kuby.kubot.domain.model.ApiRequest
 import com.kuby.kubot.domain.model.ApiResponse
+import com.kuby.kubot.domain.model.LoginResponse
 import com.kuby.kubot.domain.model.MessageBarState
+import com.kuby.kubot.domain.model.AuthResponse
 import com.kuby.kubot.domain.repository.Repository
+import com.kuby.kubot.domain.useCase.auth.AuthUseCase
 import com.kuby.kubot.util.RequestState
+import com.kuby.kubot.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
-import javax.annotation.Signed
 import javax.inject.Inject
 
 @Suppress("UNREACHABLE_CODE")
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -40,7 +39,10 @@ class LoginViewModel @Inject constructor(
     private val _signedInState: MutableState<Boolean> = mutableStateOf(false)
     val signedInState: State<Boolean> = _signedInState
 
-    private val _messageBarState: MutableState<MessageBarState> = mutableStateOf(MessageBarState())
+    private val _logInState: MutableState<Boolean> = mutableStateOf(false)
+    val LogInState: State<Boolean> = _logInState
+
+    val _messageBarState: MutableState<MessageBarState> = mutableStateOf(MessageBarState())
     val messageBarState: State<MessageBarState> = _messageBarState
 
     private val _apiResponse: MutableState<RequestState<ApiResponse>> =
@@ -48,6 +50,7 @@ class LoginViewModel @Inject constructor(
     val apiResponse: State<RequestState<ApiResponse>> = _apiResponse
 
     init {
+        getSession()
         viewModelScope.launch {
             repository.readSignedInState().collect { completed ->
                 _signedInState.value = completed
@@ -66,28 +69,57 @@ class LoginViewModel @Inject constructor(
         state = state.copy(showPassword = showPassword)
     }
 
-    fun validateForm() {
-        // Make sure email and password are not empty
+    var loginResponse by mutableStateOf<Resource<AuthResponse>?>(null)
+
+    fun saveSession(authResponse: AuthResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (!Patterns.EMAIL_ADDRESS.matcher(state.email).matches()){
-                _messageBarState.value = MessageBarState(
-                    //message = "Email is not valid",
-                    error = Exception("Email is not valid")
-                )
-            }else if (state.password.length < 8){
-                _messageBarState.value = MessageBarState(
+            authUseCase.saveSession(authResponse)
+        }
+    }
 
-                    error = Exception("password must be at least 8 characters")
-                )
-            }
-            else{
-                _messageBarState.value = MessageBarState(
-                    message = "Successfully Registered!"
-
-                )
+    fun getSession() {
+        viewModelScope.launch(Dispatchers.IO) {
+            authUseCase.getSessionData().collect(){ data ->
+                if (!data.token.isNullOrBlank()){
+                    loginResponse = Resource.Success(data)
+                }
             }
         }
+    }
 
+
+    fun login() = viewModelScope.launch(Dispatchers.IO) {
+        if (validateForm()){
+            val data = LoginResponse(
+                emailAddress = state.email,
+                password = state.password
+            )
+            _logInState.value = validateForm()
+            loginResponse = Resource.Loading
+            val result = authUseCase.login(data)
+            loginResponse = result
+            Log.d("LoginViewModel", loginResponse.toString())
+            _logInState.value = false
+        }
+
+    }
+
+    fun validateForm(): Boolean {
+        // Make sure email and password are not empty
+        if (!Patterns.EMAIL_ADDRESS.matcher(state.email).matches()){
+            _messageBarState.value = MessageBarState(
+                error = Exception("Email is not valid")
+            )
+            return false
+        }else if (state.password.length < 3){
+            _messageBarState.value = MessageBarState(
+                error = Exception("password must be at least 8 characters")
+            )
+            return false
+        }
+        else{
+            return true
+        }
     }
 
     fun saveSignedInState(signedIn: Boolean) {

@@ -1,5 +1,6 @@
 package com.kuby.kubot.presentation.screen.auth.register
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -9,17 +10,26 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kuby.kubot.domain.model.MessageBarState
+import com.kuby.kubot.domain.model.User
+import com.kuby.kubot.domain.model.AuthResponse
+import com.kuby.kubot.domain.useCase.auth.AuthUseCase
+import com.kuby.kubot.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val authUseCase: AuthUseCase
+) : ViewModel() {
 
     var state by mutableStateOf(RegisterState())
 
-    private val _messageBarState: MutableState<MessageBarState> = mutableStateOf(MessageBarState())
+    val _messageBarState: MutableState<MessageBarState> = mutableStateOf(MessageBarState())
     val messageBarState: State<MessageBarState> = _messageBarState
+
+    private val _logInState: MutableState<Boolean> = mutableStateOf(false)
+    val LogInState: State<Boolean> = _logInState
 
     fun onNameInput(name: String) {
         state = state.copy(name = name)
@@ -53,55 +63,81 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         state = state.copy(showConfirmPassword = showConfirmPassword)
     }
 
-    fun validateForm() {
-        viewModelScope.launch {
-            when {
-                state.name.length < 2 -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("Name must be at least 2 characters")
-                    )
-                }
-                state.lastName.length < 2 -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("LastName must be at least 2 characters")
-                    )
-                }
-                state.telephone.length < 2 -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("Telephone must be at least 2 characters")
-                    )
-                }
-                !Patterns.EMAIL_ADDRESS.matcher(state.email).matches() -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("Email is not valid")
-                    )
-                }
-                state.password.length < 4 -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("Password must be at least 8 characters")
-                    )
-                }
-                state.confirmPassword != state.password -> {
-                    _messageBarState.value = MessageBarState(
-                        error = Exception("Passwords do not match")
-                    )
-                }
-                else -> {
-                    _messageBarState.value = MessageBarState(
-                        message = "Successfully Registered!",
-                        //error = Exception("Successfully Registered!")
-                    )
-                }
+    fun validateForm(): Boolean {
+        when {
+            state.name.length < 2 -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("Name must be at least 2 characters")
+                )
+                return false
+            }
+            state.lastName.length < 2 -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("LastName must be at least 2 characters")
+                )
+                return false
+            }
+            state.telephone.length < 2 -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("Telephone must be at least 2 characters")
+                )
+                return false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(state.email).matches() -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("Email is not valid")
+                )
+                return false
+            }
+            state.password.length < 4 -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("Password must be at least 8 characters")
+                )
+                return false
+            }
+            state.confirmPassword != state.password -> {
+                _messageBarState.value = MessageBarState(
+                    error = Exception("Passwords do not match")
+                )
+                return false
+
+            }
+
+            else -> {
+                return true
             }
         }
-
-        resetMessageBarState()
     }
 
-    private fun resetMessageBarState() {
-        viewModelScope.launch {
-            delay(5000) // Espera 3 segundos antes de resetear el estado de la barra de mensajes
-            _messageBarState.value = MessageBarState()
+    var registerResponse by mutableStateOf<Resource<AuthResponse>?>(null)
+        private set
+
+
+    fun saveSession(authResponse: AuthResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            authUseCase.saveSession(authResponse)
         }
     }
+
+    fun login() = viewModelScope.launch(Dispatchers.IO) {
+        if (validateForm()){
+            val data = User(
+            name = state.name,
+            lastName = state.lastName,
+            emailAddress = state.email,
+            password = state.password,
+            phone = state.telephone
+            )
+            _logInState.value = validateForm()
+            registerResponse = Resource.Loading
+            val result = authUseCase.register(data)
+            registerResponse = result
+            Log.d("LoginViewModel", registerResponse.toString())
+            _logInState.value = false
+        }
+
+    }
+
+
+
 }

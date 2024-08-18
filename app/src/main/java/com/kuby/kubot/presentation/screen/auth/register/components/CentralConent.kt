@@ -137,7 +137,7 @@ fun CentralConent(
                 .padding(top = 20.dp, start = 60.dp, end = 60.dp),
             primaryText = "Login",
             icon = R.drawable.ic_arrow_right,
-            onClick = { vm.validateForm() }
+            onClick = { vm.login() }
         )
     }
 }

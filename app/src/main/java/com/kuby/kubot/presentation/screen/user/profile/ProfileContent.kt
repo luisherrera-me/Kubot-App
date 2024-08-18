@@ -1,4 +1,4 @@
-package com.kuby.kubot.presentation.screen.profile
+package com.kuby.kubot.presentation.screen.user.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
