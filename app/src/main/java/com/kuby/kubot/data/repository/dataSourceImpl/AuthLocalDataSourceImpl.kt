@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class AuthLocalDataSourceImpl constructor(private val authDatastore: AuthDatastore): AuthLocalDataSource {
 
     override suspend fun saveSession(authResponse: AuthResponse) = authDatastore.saveUser(authResponse)
-
     override fun getSession(): Flow<AuthResponse> = authDatastore.getData()
+    override suspend fun deleteSession() = authDatastore.deleteUser()
 
 }

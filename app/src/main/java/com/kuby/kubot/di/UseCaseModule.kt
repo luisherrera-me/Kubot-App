@@ -5,6 +5,7 @@ import com.kuby.kubot.data.repository.dataSource.AuthRemoteDataSource
 import com.kuby.kubot.data.repository.dataSourceImpl.AuthRemoteDataSourceImpl
 import com.kuby.kubot.domain.repository.AuthRepository
 import com.kuby.kubot.domain.useCase.auth.AuthUseCase
+import com.kuby.kubot.domain.useCase.auth.DeleteSessionUseCase
 import com.kuby.kubot.domain.useCase.auth.GetSessionDataUseCase
 import com.kuby.kubot.domain.useCase.auth.LoginUseCase
 import com.kuby.kubot.domain.useCase.auth.RegisterUseCase
@@ -23,7 +24,8 @@ class UseCaseModule {
         login = LoginUseCase(authRepository),
         register = RegisterUseCase(authRepository),
         saveSession = SaveSessionUseCase(authRepository),
-        getSessionData = GetSessionDataUseCase(authRepository)
+        getSessionData = GetSessionDataUseCase(authRepository),
+        deleteSession = DeleteSessionUseCase(authRepository)
 
     )
 }

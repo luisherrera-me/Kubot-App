@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kuby.kubot.domain.model.MessageBarState
+import com.kuby.kubot.presentation.navgation.Graph
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
 import com.kuby.kubot.presentation.screen.auth.login.LoginViewModel
 import com.kuby.kubot.presentation.screen.auth.register.RegisterViewModel
@@ -30,8 +31,8 @@ fun Register (
         }
         is Resource.Success -> {
             vm.saveSession(response.data)
-            navController.navigate(route = AuthScreen.Profile.route) {
-                popUpTo(route = AuthScreen.Login.route) {
+            navController.navigate(route = Graph.CLIENT) {
+                popUpTo(Graph.AUTH) {
                     inclusive = true
                 }
             }

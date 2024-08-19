@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -21,6 +23,7 @@ import coil.transform.CircleCropTransformation
 import com.kuby.kubot.R
 import com.kuby.kubot.domain.model.ApiResponse
 import com.kuby.kubot.domain.model.MessageBarState
+import com.kuby.kubot.presentation.components.DButton
 import com.kuby.kubot.presentation.components.GoogleButton
 import com.kuby.kubot.presentation.components.MessageBar
 import com.kuby.kubot.presentation.ui.theme.LoadingBlue
@@ -30,6 +33,7 @@ import com.kuby.kubot.util.RequestState
 @ExperimentalCoilApi
 @Composable
 fun ProfileContent(
+    vm: ProfileViewModel = hiltViewModel(),
     apiResponse: RequestState<ApiResponse>,
     messageBarState: MessageBarState,
     firstName: String,
@@ -63,6 +67,10 @@ fun ProfileContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            GoogleButton(
+                loadingState = false,
+                onClick = {vm.deleteUser()}
+            )
             CentralContent(
                 firstName = firstName,
                 onFirstNameChanged = onFirstNameChanged,

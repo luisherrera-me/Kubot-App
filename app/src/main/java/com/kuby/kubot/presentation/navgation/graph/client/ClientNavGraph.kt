@@ -37,7 +37,7 @@ fun ClientNavGraph(navController: NavHostController) {
         }
 
         composable(route = ClientScreen.Dashboard.route) {
-            DashboardScreen()
+            DashboardScreen(navController)
         }
 
 

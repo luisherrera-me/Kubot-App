@@ -47,6 +47,14 @@ fun ProfileScreen(
             )
         },
         content = {
+            ProfileTopBar(
+                onSave = {
+                    profileViewModel.updateUserInfo()
+                },
+                onDeleteAllConfirmed = {
+                    profileViewModel.deleteUser()
+                }
+            )
             ProfileContent(
                 apiResponse = apiResponse,
                 messageBarState = messageBarState,

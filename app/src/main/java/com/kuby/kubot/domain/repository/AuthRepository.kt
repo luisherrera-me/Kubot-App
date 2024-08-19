@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     suspend fun login(loginResponse: LoginResponse): Resource<AuthResponse>
     suspend fun register(user: User): Resource<AuthResponse>
-
+    suspend fun deleteSession()
     suspend fun saveSession(authResponse: AuthResponse)
     fun getSessionData(): Flow<AuthResponse>
 }

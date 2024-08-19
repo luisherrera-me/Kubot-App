@@ -12,6 +12,7 @@ import com.kuby.kubot.domain.model.MessageBarState
 import com.kuby.kubot.domain.model.User
 import com.kuby.kubot.domain.model.UserUpdate
 import com.kuby.kubot.domain.repository.Repository
+import com.kuby.kubot.domain.useCase.auth.AuthUseCase
 import com.kuby.kubot.util.Constants.MAX_LENGTH
 import com.kuby.kubot.util.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
 
     private val _user: MutableState<User?> = mutableStateOf(null)
@@ -137,13 +139,7 @@ class ProfileViewModel @Inject constructor(
         _apiResponse.value = RequestState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = repository.clearSession()
-                _clearSessionResponse.value = RequestState.Success(response)
-                _apiResponse.value = RequestState.Success(response)
-                _messageBarState.value = MessageBarState(
-                    message = response.message,
-                    error = response.error
-                )
+                val response = authUseCase.deleteSession()
             } catch (e: Exception) {
                 _clearSessionResponse.value = RequestState.Error(e)
                 _apiResponse.value = RequestState.Error(e)
