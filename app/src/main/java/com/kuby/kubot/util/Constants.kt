@@ -1,10 +1,8 @@
 package com.kuby.kubot.util
 
-import java.util.prefs.Preferences
-
 object Constants {
 
-    const val BASE_URL = "http://192.168.101.73:8080"
+    const val BASE_URL = "http://192.168.0.9:8080"
     const val PREFERENCES = "app_preferences"
     const val PREFERENCES_SIGNED_IN_KEY = "signed_in_key"
 

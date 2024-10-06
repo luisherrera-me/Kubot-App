@@ -8,12 +8,13 @@ import com.kuby.kubot.domain.model.UserUpdate
 import com.kuby.kubot.domain.repository.DataStoreOperations
 import com.kuby.kubot.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val dataStoreOperations: DataStoreOperations,
     private val ktorApi: AuthService
-): Repository{
+) : Repository {
     override suspend fun saveSignedInState(signedIn: Boolean) {
         dataStoreOperations.saveSignedInState(signedIn = signedIn)
     }
@@ -25,6 +26,8 @@ class RepositoryImpl @Inject constructor(
     override suspend fun verifyTokenOnBackend(request: ApiRequest): ApiResponse {
         val data = try {
             ktorApi.verifyTokenOnBackend(request = request)
+        } catch (e: HttpException) {
+            ApiResponse(success = false, error = e)
         } catch (e: Exception) {
             ApiResponse(success = false, error = e)
         }
@@ -37,6 +40,8 @@ class RepositoryImpl @Inject constructor(
             ktorApi.getUserInfo()
         } catch (e: Exception) {
             return ApiResponse(success = false, error = e)
+        } catch (e: HttpException) {
+            ApiResponse(success = false, error = e)
         }
     }
 
