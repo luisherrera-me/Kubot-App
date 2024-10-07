@@ -3,6 +3,7 @@ package com.kuby.kubot.presentation.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.darkColorScheme
@@ -15,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 
@@ -60,5 +63,14 @@ fun KubotTheme(
         content = content
     )
 }
+
+
+@Composable
+fun textEntryFieldTextStyle() = Typography.bodyLarge.copy(
+    fontFamily = RegularFont,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    color = colors.primary,
+)
 
 

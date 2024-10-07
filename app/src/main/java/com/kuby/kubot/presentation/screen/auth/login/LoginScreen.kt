@@ -6,17 +6,19 @@ import android.util.Log
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kuby.core.InternetConnectivityObserver.IInternetConnectivityObserver
 import com.kuby.kubot.domain.model.ApiRequest
 import com.kuby.kubot.domain.model.ApiResponse
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
 import com.kuby.kubot.presentation.screen.auth.login.components.Login
+import com.kuby.kubot.presentation.screen.auth.login.components.LoginContent
 import com.kuby.kubot.presentation.screen.common.StartActivityForResult
 import com.kuby.kubot.presentation.screen.common.signIn
-import com.kuby.kubot.presentation.screen.auth.login.components.LoginContent
 import com.kuby.kubot.util.RequestState
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -29,6 +31,9 @@ fun LoginScreen(
     val logInState by loginViewModel.LogInState
     val messageBarState by loginViewModel.messageBarState
     val apiResponse by loginViewModel.apiResponse
+    val connectivityState by loginViewModel.onlineState.collectAsState(
+        initial = IInternetConnectivityObserver.OnlineStatus.OFFLINE
+    )
 
     Log.d("LoginScreen", apiResponse.toString())
 
@@ -44,13 +49,14 @@ fun LoginScreen(
                 navController = navController,
                 onButtonClicked = {
                     loginViewModel.saveSignedInState(signedIn = true)
-                }
+                },
+                connectivityObserver = connectivityState
             )
         }
     )
 
     val activity = LocalContext.current as Activity
-    
+
     Login(navController = navController)
 
     StartActivityForResult(
@@ -89,6 +95,7 @@ fun LoginScreen(
                     loginViewModel.saveSignedInState(signedIn = false)
                 }
             }
+
             else -> {}
         }
     }

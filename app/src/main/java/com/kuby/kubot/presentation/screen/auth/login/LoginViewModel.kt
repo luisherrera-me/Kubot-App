@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kuby.core.InternetConnectivityObserver.IInternetConnectivityObserver
 import com.kuby.kubot.domain.model.ApiRequest
 import com.kuby.kubot.domain.model.ApiResponse
 import com.kuby.kubot.domain.model.LoginResponse
@@ -20,6 +21,8 @@ import com.kuby.kubot.util.RequestState
 import com.kuby.kubot.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +30,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: Repository,
-    private val authUseCase: AuthUseCase
-) : ViewModel() {
+    private val authUseCase: AuthUseCase,
+    private val connectivityObserver: IInternetConnectivityObserver,
+
+    ) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
         private set
@@ -48,6 +53,9 @@ class LoginViewModel @Inject constructor(
     private val _apiResponse: MutableState<RequestState<ApiResponse>> =
         mutableStateOf(RequestState.Idle)
     val apiResponse: State<RequestState<ApiResponse>> = _apiResponse
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val onlineState = connectivityObserver.onlineStateFlow.mapLatest { it }
 
     init {
         getSession()

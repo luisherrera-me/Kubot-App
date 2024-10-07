@@ -6,53 +6,46 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
-import com.kuby.kubot.R
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.kuby.core.InternetConnectivityObserver.IInternetConnectivityObserver
+import com.kuby.core.InternetConnectivityObserver.InternetAvailabilityIndicator
+import com.kuby.kubot.R
+import com.kuby.kubot.domain.model.MessageBarState
+import com.kuby.kubot.presentation.component.EmailField
+import com.kuby.kubot.presentation.component.PasswordField
+import com.kuby.kubot.presentation.components.CustomTextField
 import com.kuby.kubot.presentation.components.GoogleButton
 import com.kuby.kubot.presentation.components.MessageBar
-import com.kuby.kubot.domain.model.MessageBarState
-import com.kuby.kubot.presentation.components.CustomTextField
-import com.kuby.kubot.presentation.components.DButton
 import com.kuby.kubot.presentation.components.TextFieldPass
 import com.kuby.kubot.presentation.navgation.screen.auth.AuthScreen
 import com.kuby.kubot.presentation.screen.auth.login.LoginViewModel
 import com.kuby.kubot.presentation.ui.theme.RegularFont
+import com.kuby.kubot.util.keyboardVisibilityObserver
 
 @Composable
 fun LoginContent(
@@ -60,7 +53,8 @@ fun LoginContent(
     logInState: Boolean,
     navController: NavHostController,
     messageBarState: MessageBarState,
-    onButtonClicked: () -> Unit
+    onButtonClicked: () -> Unit,
+    connectivityObserver: IInternetConnectivityObserver.OnlineStatus
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -87,26 +81,32 @@ fun LoginContent(
                     )
                 )
 
-                CentralConent(
+                LoginScreenContent(
                     signedInState = signedInState,
                     navController = navController,
                     logInState = logInState,
                     onButtonClicked = onButtonClicked
                 )
                 MessageBar(messageBarState = messageBarState)
+                InternetAvailabilityIndicator(connectivityObserver)
             }
         }
     }
 }
 
 @Composable
-fun CentralConent(
+fun LoginScreenContent(
     vm: LoginViewModel = hiltViewModel(),
     signedInState: Boolean,
     logInState: Boolean,
     navController: NavHostController,
     onButtonClicked: () -> Unit
 ){
+
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val isKeyboardOpen by keyboardVisibilityObserver()
 
     Column(
         modifier = Modifier
@@ -135,20 +135,21 @@ fun CentralConent(
             fontFamily = RegularFont
         )
 
-        CustomTextField(
-            keyboardType = KeyboardType.Email,
-            textValue = vm.state.email,
+        EmailField(
+            value = vm.state.email,
+            label = null,
             onValueChange = { vm.onEmailInput(it) },
-            placeholderText = "Enter your text"
+            isError = false
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TextFieldPass(
-            textValue = vm.state.password,
+        PasswordField(
+            value = vm.state.password,
             onValueChange = { vm.onPasswordInput(it) },
-            showPassword = vm.state.showPassword,
-            onTogglePasswordVisibility = { vm.onShowPasswordInput(!vm.state.showPassword) },
+            label = null,
+            clickTogglePasswordVisibility = {vm.state.showPassword},
+            isError = false
         )
 
         GoogleButton(
@@ -193,11 +194,13 @@ fun CentralConent(
 }
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true )
 fun LoginContentPreview(){
-    //LoginContent(
-        //signedInState = true,
-        //messageBarState = MessageBarState(),
-        //onButtonClicked = {}
-    //)
+//    LoginContent(
+//        signedInState = false,
+//        messageBarState = MessageBarState(),
+//        onButtonClicked = {},
+//        logInState = false,
+//        navController = rememberNavController()
+//    )
 }
